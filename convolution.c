@@ -244,7 +244,7 @@ int convolve2D(int *in, int *out, int dataSizeX, int dataSizeY,
     outPtr = out;
     kPtr = kernel;
 
-
+    // Second Parallelization, since there are many nested fors and we don't want them to get interrupted by each other
     #pragma omp schedule(dynamic)
     #pragma omp parallel firstprivate(kPtr, inPtr, inPtr2, outPtr)
     {
@@ -455,6 +455,7 @@ int main(int argc, char **argv)
         //////////////////////////////////////////////////////////////////////////////////////////////////
         gettimeofday(&tim, NULL);
         start = tim.tv_sec+(tim.tv_usec/1000000.0);
+        // First Parallelization, since we modify different data matrices
         #pragma omp parallel
         {
             #pragma omp single nowait
